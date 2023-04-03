@@ -23,13 +23,14 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("muyangren")
 public class DownLoadController {
 
-@Resource
-private DownLoadService downLoadService;
+    @Resource
+    private DownLoadService downLoadService;
+
     /**
      * 批量下载
      */
     @PostMapping("/downloadBatch")
     public void downloadBatch(HttpServletResponse response, @RequestBody Down down) {
-        downLoadService.downLoadBatch(response,down);
+        downLoadService.downLoadBatch(response, down);
     }
 }

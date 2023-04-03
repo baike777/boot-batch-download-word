@@ -29,7 +29,7 @@ public class DownLoadThread implements Runnable {
     @Override
     public void run() {
         if (CollectionUtils.isEmpty(newDownList)){
-            System.out.println("。。。");
+           // 为空自行处理
         }
         //【根据实际调整】
         try {
