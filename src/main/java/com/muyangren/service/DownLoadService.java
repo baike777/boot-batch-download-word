@@ -14,7 +14,6 @@ public interface DownLoadService {
     /**
      * 批量下载
      * @param response
-     * @param down
      */
-    void downLoadBatch(HttpServletResponse response, Down down);
+    void downLoadBatch(HttpServletResponse response);
 }

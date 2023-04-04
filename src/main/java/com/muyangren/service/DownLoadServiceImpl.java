@@ -2,19 +2,16 @@ package com.muyangren.service;
 
 import com.muyangren.config.ExecutorConfig;
 import com.muyangren.entity.Down;
-import com.muyangren.thread.DownLoadThread;
 import com.muyangren.thread.DownLoadThreadTest;
 import com.muyangren.utils.FileUtil;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+import org.springframework.util.StopWatch;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 
@@ -34,18 +31,20 @@ public class DownLoadServiceImpl implements DownLoadService{
     private ExecutorConfig executorConfig;
 
     @Override
-    public void downLoadBatch(HttpServletResponse response, Down down) {
+    public void downLoadBatch(HttpServletResponse response) {
         // --测试用例(看效果)
         downLoadBatchTest(response);
         // --实际项目(写了个大概模板、根据业务去整合即可)
         //downLoadBatchTestActual(response,down);
     }
 
-
     private void downLoadBatchTest(HttpServletResponse response) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
         // 测试数据 10条线程、每条线程处理100份数据
-        // 文件本地统一存放路径(防止路径出现重复的情况、建议用雪花id、这里没集合就随便弄个uuid代替)
-        String filePath = FileUtil.getCaseInfoPath() + UUID.randomUUID() + File.separator;
+        // 文件本地统一存放路径(防止路径出现重复的情况、建议用雪花id、这里没集合就随便弄个时间戳代替
+        String filePath = FileUtil.getCaseInfoPath() + System.currentTimeMillis() + File.separator;
         File file = new File(filePath);
         if (!file.exists()) {
             file.mkdirs();
@@ -56,15 +55,19 @@ public class DownLoadServiceImpl implements DownLoadService{
 
             // 创建线程数
             int pageNum = 10;
-            CountDownLatch countDownLatch = new CountDownLatch((int) pageNum);
+            CountDownLatch countDownLatch = new CountDownLatch(pageNum);
             for (int i = 1; i <= pageNum; i++) {
                 executor.execute(new DownLoadThreadTest(countDownLatch, filePath));
             }
+
             countDownLatch.await();
             // 压缩文件名称
             String zipName = "导出记录" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".zip";
             // 通过浏览器下载
             FileUtil.downLoadZip(filePath, zipName, response);
+
+            stopWatch.stop();
+            System.out.println("下载共耗时："+stopWatch.getTotalTimeSeconds());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

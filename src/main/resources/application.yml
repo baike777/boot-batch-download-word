@@ -6,7 +6,7 @@ server:
 #  mapper-locations: classpath:com/muyangren/mapper/*Mapper.xml
 #  #实体扫描，多个package用逗号或者分号分隔
 #  typeAliasesPackage: com.muyangren.entity
-#  #typeEnumsPackage: org.springblade.dashboard.entity.enums
+#  #typeEnumsPackage:
 #  global-config:
 #    # 关闭MP3.0自带的banner
 #    banner: false
