@@ -1,4 +1,4 @@
-# boot-batch-download-word java利用多綫程批量下載文档
+# boot-batch-download-word java利用多线程批量下載文档
 
 # 项目介绍
 * 解决批量导出文档耗时过长导致nginx报超时问题(一般来说，nginx配置超时时间60s)
