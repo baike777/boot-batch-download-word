@@ -1,6 +1,12 @@
 server:
   port: 8888
 
+
+batch-download:
+# 循环次数
+  page-num: 4
+# 每次循环需要处理的数据数量
+  number: 250
 # mybatis
 #mybatis-plus:
 #  mapper-locations: classpath:com/muyangren/mapper/*Mapper.xml

@@ -1,12 +1,18 @@
 server:
   port: 8888
 
+
+batch-download:
+# 循环次数
+  page-num: 4
+# 每次循环需要处理的数据数量
+  number: 250
 # mybatis
 #mybatis-plus:
 #  mapper-locations: classpath:com/muyangren/mapper/*Mapper.xml
 #  #实体扫描，多个package用逗号或者分号分隔
 #  typeAliasesPackage: com.muyangren.entity
-#  #typeEnumsPackage: org.springblade.dashboard.entity.enums
+#  #typeEnumsPackage:
 #  global-config:
 #    # 关闭MP3.0自带的banner
 #    banner: false

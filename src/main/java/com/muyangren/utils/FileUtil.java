@@ -26,7 +26,7 @@ public class FileUtil {
      */
     public static void downLoadZip(String fileList, String zipFileName, HttpServletResponse response) {
         try (BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream());
-             ZipOutputStream zous = new ZipOutputStream(bos)) {
+             ZipOutputStream zos = new ZipOutputStream(bos)) {
             // 重置
             response.reset();
             response.setContentType("application/octet-stream; charset=utf-8");
@@ -39,14 +39,14 @@ public class FileUtil {
                 int len;
                 for (File file : files) {
                     try (FileInputStream in = new FileInputStream(file)) {
-                        zous.putNextEntry(new ZipEntry(file.getName()));
+                        zos.putNextEntry(new ZipEntry(file.getName()));
                         while ((len = in.read(buf)) != -1) {
-                            zous.write(buf, 0, len);
+                            zos.write(buf, 0, len);
                         }
-                        zous.closeEntry();
+                        zos.closeEntry();
                     }
                 }
-                zous.finish();
+                zos.finish();
             }
         } catch (Exception e) {
             e.printStackTrace();

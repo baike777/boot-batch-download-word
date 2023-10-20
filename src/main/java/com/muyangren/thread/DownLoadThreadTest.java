@@ -7,6 +7,8 @@ import org.springframework.core.io.Resource;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
@@ -18,38 +20,37 @@ import java.util.concurrent.CountDownLatch;
  * @Version: 1.0
  */
 public class DownLoadThreadTest implements Runnable {
+    private final CountDownLatch countDownLatch;
+    private final String filePath;
+    private final Integer number;
 
-    private CountDownLatch countDownLatch;
-
-    private  String filePath;
-
-    public DownLoadThreadTest( CountDownLatch countDownLatch, String filePath) {
+    public DownLoadThreadTest(CountDownLatch countDownLatch, String filePath, Integer number) {
         this.countDownLatch = countDownLatch;
         this.filePath = filePath;
+        this.number = number;
     }
 
     @Override
     public void run() {
-        try {
-            for (int i = 0; i < 100; i++) {
-                // 获取模板
-                Resource resource = new ClassPathResource("document" + File.separator + "word" + File.separator + "测试模板.docx");
+
+        // 获取模板
+        Resource resource = new ClassPathResource("document" + File.separator + "word" + File.separator + "测试模板.docx");
+        for (int i = 0; i < this.number; i++) {
+            // 文件名-防止重名
+            String fileName = UUID.randomUUID() + "《" + i + "》家人们.docx";
+            try (OutputStream os = Files.newOutputStream(Paths.get(filePath + fileName))) {
                 // 传入参数
                 HashMap<String, Object> data = new HashMap<>(3);
-                data.put("one","家人们谁懂啊1" );
-                data.put("two","家人们谁懂啊2");
-                data.put("three","家人们谁懂啊3");
-                // 文件名-防止重名
-                String fileName = UUID.randomUUID() + "《"+i+"》家人们.docx";
+                data.put("one", "数据数据数据数据数据数据one");
+                data.put("two", "数据数据数据数据数据数据数据数据two");
+                data.put("three", "数据数据数据数据数据数据数据数据数据three");
                 XWPFTemplate template = XWPFTemplate.compile(resource.getInputStream()).render(data);
                 // 导出到指定路径下
-                OutputStream os = new FileOutputStream(filePath + fileName);
                 template.writeAndClose(os);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            countDownLatch.countDown();
         }
+        countDownLatch.countDown();
     }
 }
